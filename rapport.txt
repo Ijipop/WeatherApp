@@ -1,0 +1,53 @@
+RAPPORT 
+
+
+*** Mention spécial, malheureusement, à cause d'un oublie de ma part, je n'ai pas fait de commit sur github sur une base
+régulière.  J'ai cru que c'était optionnel, en relisant bien l'énoncé avant de remettre mon travail, j'ai évidemment lu
+que c'était bien demandé.  Je suis sincèrement désolé pour cette omition. ***
+
+
+
+1. API CHOISIE
+
+Nom : Open-Meteo (https://open-meteo.com/)
+Type : API météo gratuite sans authentification
+
+
+2. ENDPOINTS UTILISÉS
+
+a) Géolocalisation des villes :
+   URL : https://geocoding-api.open-meteo.com/v1/search
+  
+   
+
+b) Données météo :
+   URL : https://api.open-meteo.com/v1/forecast
+  
+   
+
+3. COMPOSANTS CRÉÉS
+
+a) App.tsx 
+   - Affichage des informations de la ville 
+   - Affichage des données météo
+ 
+
+b) CitySearch.tsx 
+   - Input de recherche de villes
+   - Liste déroulante des résultats
+ 
+
+4. ERREURS SIMULÉES
+
+a) Erreur réseau/API inaccessible
+   Test : Déconnecter du WiFi et essayer de rechercher une ville
+
+b) Réponse vide ou avec une mauvaise entrée
+   Test : Rechercher une ville inexistante
+
+c) Erreur de recherche de villes
+   Test : Rechercher avec des caractères spéciaux ou avec une seule lettre
+
+5. Screenshot
+
+Le ScreenShot.png dans src/ démontre que l'application focntionne.
