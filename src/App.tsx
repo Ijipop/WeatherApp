@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import './App.css';
 import axios from "axios";
 import CitySearch from './CitySearch';
@@ -52,6 +52,34 @@ function getWeatherDescription(code: number): string {
   }
 }
 
+// Fonction pour obtenir l'icône météo en fonction du code météo
+function getWeatherIcon(code: number): string {
+  switch (code) {
+    case 0: return "☀️";
+    case 1: return "🌤️";
+    case 2: return "⛅";
+    case 3: return "☁️";
+    case 45: return "🌫️";
+    case 48: return "🌫️";
+    case 51: return "🌦️";
+    case 53: return "🌦️";
+    case 55: return "🌦️";
+    case 61: return "🌧️";
+    case 63: return "🌧️";
+    case 65: return "🌧️";
+    case 71: return "🌨️";
+    case 73: return "🌨️";
+    case 75: return "🌨️";
+    case 80: return "🌦️";
+    case 81: return "🌦️";
+    case 82: return "🌦️";
+    case 95: return "⛈️";
+    case 96: return "⛈️";
+    case 99: return "⛈️";
+    default: return "❓";
+  }
+}
+
 function App() {
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
   const [weather, setWeather] = useState<Weather | null>(null);
@@ -83,31 +111,100 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>Weather App</h1>
+      <h1>🌤️ Weather App</h1>
       <div className="search-container">
         <CitySearch onCitySelect={handleCitySelect} />
       </div>
       {selectedCity && (
-        <div>
-          <h2>Ville sélectionnée :</h2>
-          <p>
-            {selectedCity.name}, {selectedCity.country} <br />
-            Latitude: {selectedCity.latitude}, Longitude: {selectedCity.longitude}
-          </p>
+        <div className="info-card">
+          <h2>
+            <span className="weather-icon">📍</span>
+            Ville sélectionnée
+          </h2>
+          <p><strong>{selectedCity.name}, {selectedCity.country}</strong></p>
+          <p>Latitude: {selectedCity.latitude.toFixed(4)}°</p>
+          <p>Longitude: {selectedCity.longitude.toFixed(4)}°</p>
         </div>
       )}
       {weather && (
-        <div>
-          <h2>Météo actuelle</h2>
-          <p>Température : {weather.temperature}°C</p>
-          <p>Vent : {weather.windspeed} km/h</p>
-          <p>Code météo : {weather.weathercode}</p>
-          <p>Description : {getWeatherDescription(weather.weathercode)}</p>
+        <div className="info-card">
+          <h2>
+            <span className="weather-icon">{getWeatherIcon(weather.weathercode)}</span>
+            Météo actuelle
+          </h2>
+          <p><strong>Température :</strong> {weather.temperature}°C</p>
+          <p><strong>Vent :</strong> {weather.windspeed} km/h</p>
+          <p><strong>Conditions :</strong> {getWeatherDescription(weather.weathercode)}</p>
         </div>
       )}
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      {error && <div className="status-message error">{error}</div>}
     </div>
   );
 }
 
 export default App;
+
+/*
+ État géré avec useState :
+selectedCity : la ville choisie par l’utilisateur (ou null par défaut)
+
+weather : les données météo reçues depuis l’API (ou null)
+
+error : message d’erreur à afficher en cas de problème (ou null)
+
+🌐 Fonction handleCitySelect(city)
+Déclenchée quand une ville est sélectionnée via le composant CitySearch :
+
+Enregistre la ville dans selectedCity
+
+Vide weather et error pour recommencer proprement
+
+Appelle l’API open-meteo.com avec les coordonnées de la ville
+
+Si la réponse contient des données météo :
+
+Met à jour l’état weather avec la température, le vent et le code météo
+
+Sinon ou en cas d’erreur :
+
+Affiche un message d’erreur dans error
+
+🔍 Fonction getWeatherDescription(code)
+Transforme un code météo brut (ex. : 0, 63, 95) en description humaine :
+
+0 → "Ciel clair"
+
+63 → "Pluie modérée"
+
+95 → "Orage"
+
+…etc. (switch complet intégré)
+
+🧩 Interface rendue (return)
+Titre principal : Weather App
+
+Composant enfant <CitySearch onCitySelect={handleCitySelect} /> pour chercher une ville
+
+Si une ville est sélectionnée :
+
+Affiche son nom, pays, latitude et longitude
+
+Si la météo est disponible :
+
+Affiche température, vent, code météo et sa description lisible
+
+Si une erreur est présente :
+
+Affiche un message en rouge
+
+✅ Résumé rapide :
+App.tsx est le composant central de l’application météo :
+
+Gère les données et les erreurs avec useState
+
+Appelle l’API météo à la sélection d’une ville
+
+Affiche dynamiquement l’interface selon l’état (ville choisie, météo dispo, erreur)
+
+Utilise une fonction utilitaire pour traduire les codes météo en français
+*/

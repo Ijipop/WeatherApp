@@ -65,6 +65,15 @@ type Props = {
     setLoading(false);
   };
 
+  const handleCityClick = (city: City) => {
+    onCitySelect(city);
+    setQuery(city.name);
+    setResults([]);
+    setError(null);
+    setNoResults(false);
+    setShortQuery(false);
+  };
+
   return (
     <div>
       <input
@@ -73,31 +82,101 @@ type Props = {
         value={query}
         onChange={handleChange}
       />
-      {loading && <div>Chargement...</div>}
-      {error && <div style={{ color: "red" }}>{error}</div>}
+      {loading && <div className="status-message loading">🔍 Recherche en cours...</div>}
+      {error && <div className="status-message error">{error}</div>}
       {shortQuery && !loading && !error && (
-        <div style={{ color: "green" }}>
-          Tapez au moins 2 caractères pour rechercher une ville.
+        <div className="status-message warning">
+          💡 Tapez au moins 2 caractères pour rechercher une ville.
         </div>
       )}
       {noResults && !loading && !error && (
-        <div style={{ color: "orange" }}>
-          Aucune ville trouvée avec le nom "{query}". Essayez avec un autre nom.
+        <div className="status-message warning">
+          🔍 Aucune ville trouvée avec le nom "{query}". Essayez avec un autre nom.
         </div>
       )}
-      <ul>
-        {results.map((city, idx) => (
-          <li
-            key={idx}
-            style={{ cursor: "pointer" }}
-            onClick={() => onCitySelect(city)}
-          >
-            {city.name}, {city.country}
-          </li>
-        ))}
-      </ul>
+      {results.length > 0 && (
+        <ul>
+          {results.map((city, idx) => (
+            <li
+              key={idx}
+              onClick={() => handleCityClick(city)}
+            >
+              📍 {city.name}, {city.country}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
 
 export default CitySearch;
+
+
+/*
+⚙️ État local géré avec useState :
+query : le texte tapé par l’utilisateur
+
+results : liste de villes obtenues via l’API
+
+loading : booléen pour indiquer si une requête est en cours
+
+error : message d’erreur si la requête échoue
+
+noResults : booléen qui indique si aucun résultat n’a été trouvé
+
+shortQuery : booléen si l’utilisateur tape moins de 2 caractères (pour éviter les requêtes inutiles)
+
+🔁 Fonction handleChange(e)
+Déclenchée à chaque frappe dans l’input :
+
+Met à jour query avec la nouvelle valeur
+
+Réinitialise les erreurs et les drapeaux (error, noResults, shortQuery)
+
+Si la saisie fait moins de 2 caractères → n’effectue pas de requête
+
+Sinon → lance un appel axios à l’API de géocodage
+
+Si des résultats sont trouvés :
+
+Les stocke dans results (avec name, country, latitude, longitude)
+
+Si aucun résultat :
+
+Affiche un message “Aucune ville trouvée”
+
+En cas d’erreur réseau :
+
+Affiche un message d’erreur en rouge
+
+🖼️ Interface affichée (return)
+Champ texte <input> pour rechercher une ville
+
+Messages dynamiques :
+
+“Chargement...” si loading
+
+Message d’erreur si error
+
+Message vert si shortQuery
+
+Message orange si noResults
+
+Liste <ul> de résultats (chaque ville affichée comme <li>)
+
+Chaque <li> est cliquable et appelle onCitySelect(city) pour envoyer la ville sélectionnée au parent (App.tsx)
+
+✅ Résumé express :
+CitySearch.tsx est un composant autonome de recherche de ville qui :
+
+Fait un appel à l’API Open-Meteo pour géocoder un nom de ville
+
+Gère les états intermédiaires (chargement, erreur, trop court, aucun résultat)
+
+Affiche une liste cliquable de résultats
+
+Communique la ville choisie au parent avec onCitySelect
+
+
+*/
