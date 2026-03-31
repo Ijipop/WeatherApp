@@ -109,9 +109,37 @@ function App() {
     }
   };
 
+  let headerIcon: string;
+  let headerLabel: string;
+  if (weather) {
+    headerIcon = getWeatherIcon(weather.weathercode);
+    headerLabel = getWeatherDescription(weather.weathercode);
+  } else if (error && selectedCity) {
+    headerIcon = "⚠️";
+    headerLabel = error;
+  } else if (selectedCity) {
+    headerIcon = "⏳";
+    headerLabel = "Chargement de la météo…";
+  } else {
+    headerIcon = "🌤️";
+    headerLabel = "Choisis une ville pour voir la météo";
+  }
+
+  const headerLogoLoading = Boolean(selectedCity && !weather && !error);
+
   return (
     <div className="app-container">
-      <h1>🌤️ Weather App</h1>
+      <header className="app-header">
+        <span
+          className={`app-title-logo${headerLogoLoading ? " app-title-logo--loading" : ""}`}
+          title={headerLabel}
+          role="img"
+          aria-label={headerLabel}
+        >
+          {headerIcon}
+        </span>
+        <h1>Weather App</h1>
+      </header>
       <div className="search-container">
         <CitySearch onCitySelect={handleCitySelect} />
       </div>

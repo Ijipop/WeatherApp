@@ -10,6 +10,9 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+
+# Build Electron local (très lourd — ne pas versionner)
+release
 *.local
 
 # Editor directories and files

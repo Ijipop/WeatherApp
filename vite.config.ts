@@ -4,4 +4,6 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Chemins relatifs pour que l’app fonctionne dans Electron (fichier local)
+  base: './',
 })

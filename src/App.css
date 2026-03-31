@@ -89,6 +89,45 @@ body::before {
   }
 }
 
+/* En-tête : logo météo + titre */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.app-title-logo {
+  font-size: clamp(2.25rem, 8vw, 3rem);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.18));
+  user-select: none;
+  transition: transform 0.25s ease;
+}
+
+.app-title-logo:hover {
+  transform: scale(1.06);
+}
+
+.app-title-logo--loading {
+  animation: logoPulse 1s ease-in-out infinite;
+}
+
+@keyframes logoPulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
 /* Titre principal */
 h1 {
   font-size: 3.5rem;
@@ -101,7 +140,11 @@ h1 {
   text-align: center;
   letter-spacing: -0.02em;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  width: 100%;
+}
+
+.app-header h1 {
+  width: auto;
+  flex: 0 1 auto;
 }
 
 /* Conteneur de recherche */
