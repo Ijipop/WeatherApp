@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+    /* Pas d’inclusion auto de tout node_modules/@types (évite babel__core implicite) */
+    "types": [],
     "target": "ES2023",
     "lib": ["ES2023"],
     "module": "ESNext",
