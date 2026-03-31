@@ -1,5 +1,7 @@
-# Déploie le build Vite (dossier dist) sur GitHub Pages à chaque push sur main/master.
-# Après le premier déploiement : Settings → Pages → Source : GitHub Actions.
+# Déploie le build Vite (dossier dist) sur GitHub Pages.
+#
+# Une fois : repo → Settings → Pages → Build and deployment → Source : GitHub Actions
+# (pas besoin de configure-pages : il appelle l’API Pages et échoue en 404 tant que Pages n’est pas activé)
 
 name: Deploy to GitHub Pages
 
@@ -7,6 +9,10 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
+
+# Opt-in Node 24 pour les actions JS (évite l’avertissement de dépréciation Node 20)
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: read
@@ -22,15 +28,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: "20"
+          node-version: "24"
           cache: npm
 
       - name: Install dependencies
@@ -40,7 +43,7 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: dist
 
