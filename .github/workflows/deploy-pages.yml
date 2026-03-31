@@ -1,7 +1,10 @@
 # Déploie le build Vite (dossier dist) sur GitHub Pages.
 #
-# Une fois : repo → Settings → Pages → Build and deployment → Source : GitHub Actions
-# (pas besoin de configure-pages : il appelle l’API Pages et échoue en 404 tant que Pages n’est pas activé)
+# OBLIGATOIRE avant le 1er déploiement (sinon erreur 404 sur deploy) :
+#   1. https://github.com/<user>/<repo>/settings/pages
+#   2. Build and deployment → Source : « GitHub Actions » (pas « Deploy from a branch »)
+#   3. Settings → Actions → General → Workflow permissions : « Read and write permissions »
+#      (pour que GITHUB_TOKEN puisse publier sur Pages)
 
 name: Deploy to GitHub Pages
 
@@ -9,10 +12,6 @@ on:
   push:
     branches: [main, master]
   workflow_dispatch:
-
-# Opt-in Node 24 pour les actions JS (évite l’avertissement de dépréciation Node 20)
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: read
@@ -50,7 +49,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    # Requis par actions/deploy-pages (sinon erreur 400 « Missing environment »)
+    environment:
+      name: github-pages
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
